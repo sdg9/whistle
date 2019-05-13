@@ -1,18 +1,18 @@
 # 安装
 
-## 安装Node
+## 安装 Node
 
-## 安装whistle
+## 安装 whistle
 
 ## 设置代理
 
 ### 设置移动端代理
 
-移动端需要在设置中配置当前Wi-Fi的代理，以 iOS 为例：
+移动端需要在设置中配置当前 Wi-Fi 的代理，以 iOS 为例：
 
 <div><img src='https://raw.githubusercontent.com/avwo/whistle/master/docs/zh/img/iOS-proxy-all.jpg' width=700 /></div>
 
-Android同理，通过Wi-Fi来设置代理。
+Android 同理，通过 Wi-Fi 来设置代理。
 
 ### 设置系统代理
 
@@ -23,7 +23,7 @@ Android同理，通过Wi-Fi来设置代理。
 2. Windows: [windows 7 系统如何设置代理服务器](https://jingyan.baidu.com/article/0aa22375866c8988cc0d648c.html)
 
 3. Linux: Settings > Network > VPN > Network Proxy > Manual
-  
+
   <div>
     <img src='https://raw.githubusercontent.com/avwo/whistle/master/docs/zh/img/linux-proxy-1.jpg' width='48%' />
     <img src='https://raw.githubusercontent.com/avwo/whistle/master/docs/zh/img/linux-proxy-1.jpg' width='48%' />
@@ -46,7 +46,7 @@ Android同理，通过Wi-Fi来设置代理。
 
 ## 安装根证书
 
-移动端需要在设置代理并关闭HTTPS拦截后，通过访问 `http://rootca.pro/` 在浏览器打开并安装。PC端可直接通过`HTTPS`菜单下的下载入口来下载安装证书。
+移动端需要在设置代理并关闭 HTTPS 拦截后，通过访问 `http://rootca.pro/` 在浏览器打开并安装。PC 端可直接通过`HTTPS`菜单下的下载入口来下载安装证书。
 
 <div><img src='../assets/download-rootca.jpg' width=300 /></div>
 
@@ -58,13 +58,11 @@ iOS 10.3 之后需要手动信任自定义根证书，设置路径：Settings > 
 
 [详细请可以参考这篇文章](http://www.neglectedpotential.com/2017/04/trusting-custom-root-certificates-on-ios-10-3/)
 
-<div><img src='https://raw.githubusercontent.com/avwo/whistle/master/docs/zh/img/ios10.3_ca.PNG' width=300 /></div>
-
 ### Android
 
-* 部分浏览器不会自动识别 ca 证书，可以通过 Android Chrome 来完成安装
+- 部分浏览器不会自动识别 ca 证书，可以通过 Android Chrome 来完成安装
 
-* android 6.0 之后的一些app在成功安装证书后仍然无法对https连接进行手抓包，有可能是该app没有添加信任用户自定义证书的权限。请确认该app是否有如下配置：
+- android 6.0 之后的一些 app 在成功安装证书后仍然无法对 https 连接进行手抓包，有可能是该 app 没有添加信任用户自定义证书的权限。请确认该 app 是否有如下配置：
 
   ```xml
   <base-config cleartextTrafficPermitted="true">
@@ -75,7 +73,7 @@ iOS 10.3 之后需要手动信任自定义根证书，设置路径：Settings > 
   </base-config>
   ```
 
-  这主要是因为android 6.0之后的版本默认配置发生了变化，更多请看[Android开发文档](https://developer.android.com/training/articles/security-config#base-config)。
+  这主要是因为 android 6.0 之后的版本默认配置发生了变化，更多请看[Android 开发文档](https://developer.android.com/training/articles/security-config#base-config)。
 
 ### Windows
 
@@ -95,7 +93,7 @@ Mac 安装证书后，需要手动信任证书：
 
 Chrome(Chromium)：[参照这个教程](http://www.richud.com/wiki/Ubuntu_chrome_browser_import_self_signed_certificate)
 
-1. 地址栏输入chrome://settings/
+1. 地址栏输入 chrome://settings/
 2. Show advanced Settings > Manage certificates > Authorities > Import
 3. 选择证书后确认，重启浏览器
 4. done
@@ -104,6 +102,6 @@ Chrome(Chromium)：[参照这个教程](http://www.richud.com/wiki/Ubuntu_chrome
 
 ### 可能遇到的问题
 
-按下面步骤安装证书后，如果还出现安全提醒，这个主要原因是之前你访问过该页面，导致长连接已建立，可以等段时间再访问、或重新打开浏览器，或重启下whistle: `w2 restart`
+按下面步骤安装证书后，如果还出现安全提醒，这个主要原因是之前你访问过该页面，导致长连接已建立，可以等段时间再访问、或重新打开浏览器，或重启下 whistle: `w2 restart`
 
-## 更新whistle
+## 更新 whistle

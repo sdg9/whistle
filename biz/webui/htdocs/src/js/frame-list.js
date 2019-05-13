@@ -104,16 +104,19 @@ var FrameList = React.createClass({
     if (!reqData) {
       return;
     }
-    dataCenter.socket.abort({
-      reqId: reqData.id
-    }, function(data, xhr) {
-      if (!data) {
-        util.showSystemError(xhr);
-      } else {
-        reqData.closed = true;
-        self.autoRefresh();
+    dataCenter.socket.abort(
+      {
+        reqId: reqData.id
+      },
+      function(data, xhr) {
+        if (!data) {
+          util.showSystemError(xhr);
+        } else {
+          reqData.closed = true;
+          self.autoRefresh();
+        }
       }
-    });
+    );
   },
   changeStatus: function(reqData, option, isSend) {
     var self = this;
@@ -159,7 +162,7 @@ var FrameList = React.createClass({
   },
   shouldScrollToBottom: function() {
     var con = this.container;
-    var ctn =this.content;
+    var ctn = this.content;
     var modal = this.props.modal;
     var atBottom = con.scrollTop + con.offsetHeight + 5 > ctn.offsetHeight;
     if (atBottom) {
@@ -207,109 +210,149 @@ var FrameList = React.createClass({
     var activeItem = modal.getActive();
     var list = modal.getList();
     util.socketIsClosed(reqData);
-    return (<div className="fill orient-vertical-box w-frames-list">
-      <FilterInput onChange={self.onFilterChange} />
-      <div className="w-frames-action">
-        <RecordBtn ref="recordBtn" onClick={this.handleAction} disabledRecord={reqData.closed} />
-        <a onClick={self.clear} className="w-remove-menu"
-          href="javascript:;" draggable="false">
-          <span className="glyphicon glyphicon-remove"></span>Clear
-        </a>
-        <a onClick={self.replay} className={'w-remove-menu' + ((!activeItem || reqData.closed) ? ' w-disabled' : '')}
-          href="javascript:;" draggable="false">
-          <span className="glyphicon glyphicon-repeat"></span>Replay
-        </a>
-        <a onClick={self.compose} className={'w-remove-menu' + (activeItem ? '' : ' w-disabled')}
-          href="javascript:;" draggable="false">
-          <span className="glyphicon glyphicon-edit"></span>Compose
-        </a>
-        <a onClick={self.abort} className={'w-remove-menu' + (reqData.closed ? ' w-disabled' : '')}
-          href="javascript:;" draggable="false">
-          <span className="glyphicon glyphicon-ban-circle"></span>Abort
-        </a>
-        <DropDown
-          disabled={reqData.closed}
-          value={reqData.sendStatus || 0}
-          onChange={self.onSendStatusChange}
-          options={SEND_PERATORS}
-        />
-        <DropDown
-          disabled={reqData.closed}
-          value={reqData.receiveStatus || 0}
-          onChange={self.onReceiveStatusChange}
-          options={RECEIVE_PERATORS}
-        />
-      </div>
-      <div
-        tabIndex="0"
-        onKeyDown={this.onClear}
-        style={{background: keyword ? '#ffffe0' : undefined}}
-        onScroll={self.shouldScrollToBottom} ref={self.setContainer} className="fill w-frames-list">
-        <ul ref={self.setContent}>
-          {list.map(function(item) {
-            var statusClass = '';
-            if (item.closed || item.err || item.isError) {
-              reqData.closed = item.closed;
-              reqData.err = item.err || item.data;
-              if (item.closed) {
-                statusClass = ' w-connection-closed';
-              } else {
-                statusClass = ' w-connection-error';
-              }
-              item.title = item.title || 'Date: ' + new Date(parseInt(item.frameId, 10)).toLocaleString();
+    return (
+      <div className="fill orient-vertical-box w-frames-list">
+        <FilterInput onChange={self.onFilterChange} />
+        <div className="w-frames-action">
+          <RecordBtn
+            ref="recordBtn"
+            onClick={this.handleAction}
+            disabledRecord={reqData.closed}
+          />
+          <a
+            onClick={self.clear}
+            className="w-remove-menu"
+            href="javascript:;"
+            draggable="false"
+          >
+            <span className="glyphicon glyphicon-remove" />Clear
+          </a>
+          <a
+            onClick={self.replay}
+            className={
+              'w-remove-menu' +
+              (!activeItem || reqData.closed ? ' w-disabled' : '')
             }
-            if (item.data == null) {
-              item.data = util.getBody(item, true);
-              if (item.data.length > 500) {
-                item.data = item.data.substring(0, 500) + '...';
-              }
-            }
-            if (!item.title && !item.closed) {
-              item.title = 'Date: ' + new Date(parseInt(item.frameId, 10)).toLocaleString()
-               + '\nFrom: ' + (item.isClient ? 'Client' : 'Server');
-              if (item.opcode) {
-                item.title += '\nOpcode: ' + item.opcode;
-                item.title += '\nType: ' + (item.opcode == 1 ? 'Text' : 'Binary');
-              }
-              if (item.compressed) {
-                item.title += '\nCompressed: ' + item.compressed;
-              }
-              if (item.mask) {
-                item.title += '\nMask: ' + item.mask;
-              }
-              var length = item.length;
-              if (length >= 0) {
-                if (length >= 1024) {
-                  length += '(' + Number(length / 1024).toFixed(2) + 'k)';
+            href="javascript:;"
+            draggable="false"
+          >
+            <span className="glyphicon glyphicon-repeat" />Replay
+          </a>
+          <a
+            onClick={self.compose}
+            className={'w-remove-menu' + (activeItem ? '' : ' w-disabled')}
+            href="javascript:;"
+            draggable="false"
+          >
+            <span className="glyphicon glyphicon-edit" />Compose
+          </a>
+          <a
+            onClick={self.abort}
+            className={'w-remove-menu' + (reqData.closed ? ' w-disabled' : '')}
+            href="javascript:;"
+            draggable="false"
+          >
+            <span className="glyphicon glyphicon-ban-circle" />Abort1
+          </a>
+          <DropDown
+            disabled={reqData.closed}
+            value={reqData.sendStatus || 0}
+            onChange={self.onSendStatusChange}
+            options={SEND_PERATORS}
+          />
+          <DropDown
+            disabled={reqData.closed}
+            value={reqData.receiveStatus || 0}
+            onChange={self.onReceiveStatusChange}
+            options={RECEIVE_PERATORS}
+          />
+        </div>
+        <div
+          tabIndex="0"
+          onKeyDown={this.onClear}
+          style={{ background: keyword ? '#ffffe0' : undefined }}
+          onScroll={self.shouldScrollToBottom}
+          ref={self.setContainer}
+          className="fill w-frames-list"
+        >
+          <ul ref={self.setContent}>
+            {list.map(function(item) {
+              var statusClass = '';
+              if (item.closed || item.err || item.isError) {
+                reqData.closed = item.closed;
+                reqData.err = item.err || item.data;
+                if (item.closed) {
+                  statusClass = ' w-connection-closed';
+                } else {
+                  statusClass = ' w-connection-error';
                 }
-                item.title += '\nLength: ' + length;
+                item.title =
+                  item.title ||
+                  'Date: ' +
+                    new Date(parseInt(item.frameId, 10)).toLocaleString();
               }
-            }
-            var icon = 'arrow-left';
-            if (item.closed) {
-              icon = 'minus-sign';
-            } else if (item.isClient) {
-              icon = 'arrow-right';
-            }
-            return (
-              <li
-                key={item.frameId}
-                title={item.title}
-                style={{display: item.hide ? 'none' : undefined}}
-                onClick={function() {
-                  onClickFrame && onClickFrame(item);
-                }}
-                onDoubleClick={self.onDoubleClick}
-                className={(item.isClient ? 'w-frames-send' : '') + (item.ignore ? ' w-frames-ignore' : '')
-                  + (item.active ? '  w-frames-selected' : '') + statusClass}>
-                <span className={'glyphicon glyphicon-' + icon}></span>
-                {item.data}
-              </li>
-            );
-          })}
-        </ul>
+              if (item.data == null) {
+                item.data = util.getBody(item, true);
+                if (item.data.length > 500) {
+                  item.data = item.data.substring(0, 500) + '...';
+                }
+              }
+              if (!item.title && !item.closed) {
+                item.title =
+                  'Date: ' +
+                  new Date(parseInt(item.frameId, 10)).toLocaleString() +
+                  '\nFrom: ' +
+                  (item.isClient ? 'Client' : 'Server');
+                if (item.opcode) {
+                  item.title += '\nOpcode: ' + item.opcode;
+                  item.title +=
+                    '\nType: ' + (item.opcode == 1 ? 'Text' : 'Binary');
+                }
+                if (item.compressed) {
+                  item.title += '\nCompressed: ' + item.compressed;
+                }
+                if (item.mask) {
+                  item.title += '\nMask: ' + item.mask;
+                }
+                var length = item.length;
+                if (length >= 0) {
+                  if (length >= 1024) {
+                    length += '(' + Number(length / 1024).toFixed(2) + 'k)';
+                  }
+                  item.title += '\nLength: ' + length;
+                }
+              }
+              var icon = 'arrow-left';
+              if (item.closed) {
+                icon = 'minus-sign';
+              } else if (item.isClient) {
+                icon = 'arrow-right';
+              }
+              return (
+                <li
+                  key={item.frameId}
+                  title={item.title}
+                  style={{ display: item.hide ? 'none' : undefined }}
+                  onClick={function() {
+                    onClickFrame && onClickFrame(item);
+                  }}
+                  onDoubleClick={self.onDoubleClick}
+                  className={
+                    (item.isClient ? 'w-frames-send' : '') +
+                    (item.ignore ? ' w-frames-ignore' : '') +
+                    (item.active ? '  w-frames-selected' : '') +
+                    statusClass
+                  }
+                >
+                  <span className={'glyphicon glyphicon-' + icon} />
+                  {item.data}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
-    </div>);
+    );
   }
 });
 

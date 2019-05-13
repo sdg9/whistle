@@ -32,7 +32,7 @@ var contextMenuList = [
       { name: 'Inspectors' },
       { name: 'Frames' },
       { name: 'Timeline' },
-      { name: 'New Tab'},
+      { name: 'New Tab' },
       { name: 'QR Code' },
       { name: 'Preview' }
     ]
@@ -63,7 +63,7 @@ var contextMenuList = [
   },
   {
     name: 'Remove',
-    list:  [
+    list: [
       { name: 'All' },
       { name: 'One' },
       { name: 'Others' },
@@ -75,7 +75,7 @@ var contextMenuList = [
   },
   {
     name: 'Filter',
-    list:  [
+    list: [
       { name: 'Edit' },
       { name: 'Exclude All Such Host', action: 'excludeHost' },
       { name: 'Exclude All Such URL', action: 'excludeUrl' }
@@ -83,11 +83,7 @@ var contextMenuList = [
   },
   {
     name: 'Actions',
-    list: [
-      { name: 'Abort' },
-      { name: 'Replay' },
-      { name: 'Compose' }
-    ]
+    list: [{ name: 'Abort44' }, { name: 'Replay' }, { name: 'Compose' }]
   },
   { name: 'Share' },
   { name: 'Import' },
@@ -99,14 +95,17 @@ function getUploadSessionsFn() {
   try {
     var uploadSessions = window.parent.uploadWhistleSessions;
     return typeof uploadSessions === 'function' ? uploadSessions : null;
-  } catch(e) {}
+  } catch (e) {}
 }
 
 function getClassName(data) {
-  return getStatusClass(data) + ' w-req-data-item'
-    + (data.isHttps ? ' w-tunnel' : '')
-      + (hasRules(data) ? ' w-has-rules' : '')
-        + (data.selected ? ' w-selected' : '');
+  return (
+    getStatusClass(data) +
+    ' w-req-data-item' +
+    (data.isHttps ? ' w-tunnel' : '') +
+    (hasRules(data) ? ' w-has-rules' : '') +
+    (data.selected ? ' w-selected' : '')
+  );
 }
 
 function hasRules(data) {
@@ -129,7 +128,7 @@ function hasRules(data) {
 function getStatusClass(data) {
   var type = '';
   var headers = data.res.headers;
-  switch(util.getContentType(headers)) {
+  switch (util.getContentType(headers)) {
   case 'JS':
     type = 'warning';
     break;
@@ -163,7 +162,7 @@ function getSelectedRows() {
   }
   try {
     range = range.getRangeAt(0);
-  } catch(e) {
+  } catch (e) {
     return;
   }
   var startElem = $(range.startContainer).closest('.w-req-data-item');
@@ -192,12 +191,19 @@ function getFilename(item, type) {
   if (name) {
     index = name.lastIndexOf('.');
     if (index !== -1 && index < name.length - 1) {
-      return name.substring(0, index) + '_' + type + (isRaw ? '.txt' : '.' + name.substring(index + 1));
+      return (
+        name.substring(0, index) +
+        '_' +
+        type +
+        (isRaw ? '.txt' : '.' + name.substring(index + 1))
+      );
     }
   } else {
     name = url.substring(0, url.indexOf('/'));
   }
-  var suffix = isRaw ? '' : util.getExtension(type[2] === 'q' ? item.req.headers : item.res.headers);
+  var suffix = isRaw
+    ? ''
+    : util.getExtension(type[2] === 'q' ? item.req.headers : item.res.headers);
   return name + '_' + type + suffix;
 }
 
@@ -238,26 +244,31 @@ var ReqData = React.createClass({
       }
       self.setState({ draggable: draggable });
     };
-    $(self.container).on('keydown', function(e) {
-      var modal = self.props.modal;
-      toggoleDraggable(e);
-      if (!modal) {
-        return;
-      }
-      var item;
-      if (e.keyCode == 38) { //up
-        item = modal.prev();
-      } else if (e.keyCode == 40) {//down
-        item = modal.next();
-      }
+    $(self.container)
+      .on('keydown', function(e) {
+        var modal = self.props.modal;
+        toggoleDraggable(e);
+        if (!modal) {
+          return;
+        }
+        var item;
+        if (e.keyCode == 38) {
+          //up
+          item = modal.prev();
+        } else if (e.keyCode == 40) {
+          //down
+          item = modal.next();
+        }
 
-      if (item) {
-        self.onClick(e, item, true);
-        e.preventDefault();
-      }
-    }).on('scroll', render).on('keyup', toggoleDraggable)
-    .on('mouseover', toggoleDraggable)
-    .on('mouseleave', toggoleDraggable);
+        if (item) {
+          self.onClick(e, item, true);
+          e.preventDefault();
+        }
+      })
+      .on('scroll', render)
+      .on('keyup', toggoleDraggable)
+      .on('mouseover', toggoleDraggable)
+      .on('mouseleave', toggoleDraggable);
 
     $(window).on('resize', render);
   },
@@ -303,8 +314,7 @@ var ReqData = React.createClass({
     } else {
       rows;
       if (e.shiftKey && (rows = getSelectedRows())) {
-        modal.setSelectedList(rows[0].attr('data-id'),
-            rows[1].attr('data-id'));
+        modal.setSelectedList(rows[0].attr('data-id'), rows[1].attr('data-id'));
       } else {
         item.selected = !allowMultiSelect || !item.selected;
       }
@@ -317,7 +327,11 @@ var ReqData = React.createClass({
         activeItem: item
       });
     }
-    hm && util.ensureVisible(ReactDOM.findDOMNode(self.refs[item.id]), self.container);
+    hm &&
+      util.ensureVisible(
+        ReactDOM.findDOMNode(self.refs[item.id]),
+        self.container
+      );
   },
   clearSelection: function() {
     var modal = this.props.modal;
@@ -370,7 +384,12 @@ var ReqData = React.createClass({
   reselectRules: function(data, autoUpdate) {
     var self = this;
     self.state.rules.clearAllSelected();
-    self.setSelected(self.state.rules, 'Default', !data.defaultRulesIsDisabled, autoUpdate);
+    self.setSelected(
+      self.state.rules,
+      'Default',
+      !data.defaultRulesIsDisabled,
+      autoUpdate
+    );
     data.list.forEach(function(name) {
       self.setSelected(self.state.rules, name, true, autoUpdate);
     });
@@ -379,7 +398,9 @@ var ReqData = React.createClass({
     var urlList = [];
     var list = this.getActiveList(item);
     list.forEach(function(item) {
-      var url = item.isHttps ? item.path : item.url.replace(/\?.*$/, '').substring(0, 1024);
+      var url = item.isHttps
+        ? item.path
+        : item.url.replace(/\?.*$/, '').substring(0, 1024);
       if (urlList.indexOf(url) === -1) {
         urlList.push(url);
       }
@@ -400,7 +421,7 @@ var ReqData = React.createClass({
   onClickContextMenu: function(action, e) {
     var self = this;
     var item = self.currentFocusItem;
-    switch(action) {
+    switch (action) {
     case 'New Tab':
       item && window.open(item.url);
       break;
@@ -440,49 +461,61 @@ var ReqData = React.createClass({
       break;
     case 'Req Body':
       events.trigger('showFilenameInput', {
-        title: 'Set the filename of request body',
-        base64: item.req.base64,
-        name: getFilename(item, 'req_body')
-      });
+          title: 'Set the filename of request body',
+          base64: item.req.base64,
+          name: getFilename(item, 'req_body')
+        });
       break;
     case 'Res Body':
       events.trigger('showFilenameInput', {
-        title: 'Set the filename of response body',
-        base64: item.res.base64,
-        name: getFilename(item, 'res_body')
-      });
+          title: 'Set the filename of response body',
+          base64: item.res.base64,
+          name: getFilename(item, 'res_body')
+        });
       break;
     case 'Req Raw':
       var req = item.req;
       var realUrl = item.realUrl;
       if (!realUrl || !/^(?:http|wss)s?:\/\//.test(realUrl)) {
-        realUrl = item.url;
-      }
-      var reqLine = [req.method, req.method == 'CONNECT' ? req.headers.host : util.getPath(realUrl),
-        'HTTP/' + (req.httpVersion || '1.1')].join(' ');
+          realUrl = item.url;
+        }
+      var reqLine = [
+          req.method,
+          req.method == 'CONNECT' ? req.headers.host : util.getPath(realUrl),
+          'HTTP/' + (req.httpVersion || '1.1')
+        ].join(' ');
       events.trigger('showFilenameInput', {
-        title: 'Set the filename of request raw data',
-        headers: reqLine + '\r\n' + util.objectToString(req.headers, req.rawHeaderNames, true),
-        base64: req.base64,
-        name: getFilename(item, 'req_raw')
-      });
+          title: 'Set the filename of request raw data',
+          headers:
+            reqLine +
+            '\r\n' +
+            util.objectToString(req.headers, req.rawHeaderNames, true),
+          base64: req.base64,
+          name: getFilename(item, 'req_raw')
+        });
       break;
     case 'Res Raw':
       var res = item.res;
-      var statusLine = ['HTTP/' + (item.req.httpVersion || '1.1'), res.statusCode,
-        util.getStatusMessage(res)].join(' ');
+      var statusLine = [
+          'HTTP/' + (item.req.httpVersion || '1.1'),
+          res.statusCode,
+          util.getStatusMessage(res)
+        ].join(' ');
       events.trigger('showFilenameInput', {
-        title: 'Set the filename of response raw data',
-        headers: statusLine + '\r\n' + util.objectToString(res.headers, res.rawHeaderNames, true),
-        base64: item.res.base64,
-        name: getFilename(item, 'res_raw')
-      });
+          title: 'Set the filename of response raw data',
+          headers:
+            statusLine +
+            '\r\n' +
+            util.objectToString(res.headers, res.rawHeaderNames, true),
+          base64: item.res.base64,
+          name: getFilename(item, 'res_raw')
+        });
       break;
     case 'Share':
       events.trigger('uploadSessions', {
-        curItem: item,
-        upload: getUploadSessionsFn()
-      });
+          curItem: item,
+          upload: getUploadSessionsFn()
+        });
       break;
     case 'Import':
       events.trigger('importSessions', e);
@@ -523,7 +556,9 @@ var ReqData = React.createClass({
     }
   },
   onContextMenu: function(e) {
-    var dataId = $(e.target).closest('.w-req-data-item').attr('data-id');
+    var dataId = $(e.target)
+      .closest('.w-req-data-item')
+      .attr('data-id');
     var modal = this.props.modal;
     var item = modal.getItem(dataId);
     var disabled = !item;
@@ -536,17 +571,18 @@ var ReqData = React.createClass({
       list0[6].disabled = true;
     } else {
       var type = util.getContentType(item.res.headers);
-      list0[6].disabled = !item.res.base64 || (type !== 'HTML' && type !== 'IMG');
+      list0[6].disabled =
+        !item.res.base64 || (type !== 'HTML' && type !== 'IMG');
     }
     list0[0].disabled = disabled;
     list0[1].disabled = disabled;
-    list0[2].disabled = (disabled || !item.frames);
+    list0[2].disabled = disabled || !item.frames;
     list0[3].disabled = disabled;
 
     contextMenuList[1].disabled = disabled;
     contextMenuList[1].list.forEach(function(menu) {
       menu.disabled = disabled;
-      switch(menu.name) {
+      switch (menu.name) {
       case 'URL':
         menu.copyText = item && item.url.replace(/[?#].*$/, '');
         break;
@@ -571,11 +607,15 @@ var ReqData = React.createClass({
         menu.copyText = serverIp;
         break;
       case 'Req Headers':
-        menu.copyText = item && util.objectToString(item.req.rawHeaders || item.req.headers);
+        menu.copyText =
+            item &&
+            util.objectToString(item.req.rawHeaders || item.req.headers);
         menu.disabled = !menu.copyText;
         break;
       case 'Res Headers':
-        menu.copyText = item && util.objectToString(item.res.rawHeaders || item.res.headers);
+        menu.copyText =
+            item &&
+            util.objectToString(item.res.rawHeaders || item.res.headers);
         menu.disabled = !menu.copyText;
         break;
       case 'Cookie':
@@ -610,7 +650,7 @@ var ReqData = React.createClass({
     list3[4].disabled = selectedCount === hasData;
     list3[5].disabled = disabled;
     list3[6].disabled = disabled;
-    
+
     var list4 = contextMenuList[4].list;
     list4[1].disabled = disabled;
     list4[2].disabled = disabled;
@@ -631,10 +671,11 @@ var ReqData = React.createClass({
       list5[1].disabled = true;
       list5[2].disabled = true;
     }
-    
+
     var uploadItem = contextMenuList[6];
     uploadItem.hide = !getUploadSessionsFn();
-    contextMenuList[8].disabled = uploadItem.disabled = disabled && !selectedCount;
+    contextMenuList[8].disabled = uploadItem.disabled =
+      disabled && !selectedCount;
     var data = util.getMenuPosition(e, 110, uploadItem.hide ? 280 : 310);
     data.list = contextMenuList;
     data.className = data.marginRight < 260 ? 'w-ctx-menu-left' : '';
@@ -644,7 +685,7 @@ var ReqData = React.createClass({
     var self = this;
     var modal = self.props.modal;
     var autoRefresh = modal && modal.search(keyword);
-    self.setState({filterText: keyword}, function() {
+    self.setState({ filterText: keyword }, function() {
       autoRefresh && self.autoRefresh();
     });
     clearTimeout(self.networkStateChangeTimer);
@@ -703,7 +744,7 @@ var ReqData = React.createClass({
     if (modal) {
       var sortColumns = [];
       Object.keys(columnState).forEach(function(name) {
-        if (order = columnState[name]) {
+        if ((order = columnState[name])) {
           sortColumns.push({
             name: name,
             order: order
@@ -721,11 +762,16 @@ var ReqData = React.createClass({
     var name = col.name;
     var disabledColumns = columns.isDisabled();
     return (
-      <th {...this.state.dragger} data-name={name}
+      <th
+        {...this.state.dragger}
+        data-name={name}
         draggable={!disabledColumns}
-        key={name} className={col.className}
-        style={{color: columnState[name] ? '#337ab7' : undefined}}>
-        {col.title}<Spinner order={columnState[name]} />
+        key={name}
+        className={col.className}
+        style={{ color: columnState[name] ? '#337ab7' : undefined }}
+      >
+        {col.title}
+        <Spinner order={columnState[name]} />
       </th>
     );
   },
@@ -754,61 +800,106 @@ var ReqData = React.createClass({
     for (var i = 0, len = columnList.length; i < len; i++) {
       minWidth += columnList[i].minWidth;
     }
-    minWidth = {'min-width': minWidth + 'px'};
+    minWidth = { 'min-width': minWidth + 'px' };
 
     return (
-        <div className="fill w-req-data-con orient-vertical-box">
-          <div style={minWidth} className="w-req-data-content fill orient-vertical-box">
-            <div className="w-req-data-headers">
-              <table className="table">
-                  <thead>
-                    <tr onClick={self.orderBy}>
-                      <th className="order">#</th>
-                      {columnList.map(this.renderColumn)}
-                    </tr>
-                  </thead>
-                </table>
-            </div>
-            <div ref="container" tabIndex="0" onContextMenu={self.onContextMenu}
-              style={{background: (dataCenter.hashFilterObj || filterText) ? 'lightyellow' : undefined}}
-              className="w-req-data-list fill">
-              <table ref="content" className="table" onDragStart={this.onDragStart}>
-                  <tbody>
-                  {
-                    list.map(function(item, i) {
-                      i = hasKeyword ? index : i;
-
-                      return (<tr tabIndex="-1" draggable={draggable} ref={item.id} data-id={item.id} key={item.id} style={{display: item.hide ? 'none' : ''}}
-                              className={getClassName(item)}
-                              onClick={function(e) {self.onClick(e, item);}}
-                              onDoubleClick={self.props.onDoubleClick}>
-                              <th className="order" scope="row">{hasKeyword && !item.hide ? ++index : item.order}</th>
-                              {columnList.map(function(col) {
-                                var name = col.name;
-                                var className = col.className;
-                                if (name === 'path') {
-                                  var url, path;
-                                  if (!item.hide && i >= startIndex && i <= endIndex) {
-                                    url = item.url;
-                                    path = item.path;
-                                  }
-                                  return <td key={name} className="path" title={url}>{path}</td>;
-                                }
-                                var value = name === 'hostIp' ? util.getServerIp(item) : item[name];
-                                return (<td key={name} className={className}
-                                  title={col.showTitle ? value : undefined}>{value}</td>);
-                              })}
-                            </tr>);
-                    })
-                  }
-                  </tbody>
-                </table>
-            </div>
+      <div className="fill w-req-data-con orient-vertical-box">
+        <div
+          style={minWidth}
+          className="w-req-data-content fill orient-vertical-box"
+        >
+          <div className="w-req-data-headers">
+            <table className="table">
+              <thead>
+                <tr onClick={self.orderBy}>
+                  <th className="order">#</th>
+                  {columnList.map(this.renderColumn)}
+                </tr>
+              </thead>
+            </table>
           </div>
-          <FilterInput ref="filterInput" onKeyDown={this.onFilterKeyDown}
-            onChange={this.onFilterChange} wStyle={minWidth} />
-          <ContextMenu onClick={this.onClickContextMenu} ref="contextMenu" />
-          <QRCodeDialog ref="qrcodeDialog" />
+          <div
+            ref="container"
+            tabIndex="0"
+            onContextMenu={self.onContextMenu}
+            style={{
+              background:
+                dataCenter.hashFilterObj || filterText
+                  ? 'lightyellow'
+                  : undefined
+            }}
+            className="w-req-data-list fill"
+          >
+            <table
+              ref="content"
+              className="table"
+              onDragStart={this.onDragStart}
+            >
+              <tbody>
+                {list.map(function(item, i) {
+                  i = hasKeyword ? index : i;
+
+                  return (
+                    <tr
+                      tabIndex="-1"
+                      draggable={draggable}
+                      ref={item.id}
+                      data-id={item.id}
+                      key={item.id}
+                      style={{ display: item.hide ? 'none' : '' }}
+                      className={getClassName(item)}
+                      onClick={function(e) {
+                        self.onClick(e, item);
+                      }}
+                      onDoubleClick={self.props.onDoubleClick}
+                    >
+                      <th className="order" scope="row">
+                        {hasKeyword && !item.hide ? ++index : item.order}
+                      </th>
+                      {columnList.map(function(col) {
+                        var name = col.name;
+                        var className = col.className;
+                        if (name === 'path') {
+                          var url, path;
+                          if (!item.hide && i >= startIndex && i <= endIndex) {
+                            url = item.url;
+                            path = item.path;
+                          }
+                          return (
+                            <td key={name} className="path" title={url}>
+                              {path}
+                            </td>
+                          );
+                        }
+                        var value =
+                          name === 'hostIp'
+                            ? util.getServerIp(item)
+                            : item[name];
+                        return (
+                          <td
+                            key={name}
+                            className={className}
+                            title={col.showTitle ? value : undefined}
+                          >
+                            {value}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <FilterInput
+          ref="filterInput"
+          onKeyDown={this.onFilterKeyDown}
+          onChange={this.onFilterChange}
+          wStyle={minWidth}
+        />
+        <ContextMenu onClick={this.onClickContextMenu} ref="contextMenu" />
+        <QRCodeDialog ref="qrcodeDialog" />
       </div>
     );
   }

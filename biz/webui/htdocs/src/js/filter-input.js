@@ -10,10 +10,10 @@ var FilterInput = React.createClass({
   onFilterChange: function(e) {
     var value = e.target.value;
     this.props.onChange && this.props.onChange(value);
-    this.setState({filterText: value});
+    this.setState({ filterText: value });
   },
   onFilterKeyDown: function(e) {
-    if ((e.ctrlKey || e.metaKey)) {
+    if (e.ctrlKey || e.metaKey) {
       if (e.keyCode == 68) {
         this.clearFilterText();
         e.preventDefault();
@@ -25,25 +25,36 @@ var FilterInput = React.createClass({
     if (typeof this.props.onKeyDown === 'function') {
       this.props.onKeyDown(e);
     }
-
   },
   clearFilterText: function() {
     this.props.onChange && this.props.onChange('');
-    this.setState({filterText: ''});
+    this.setState({ filterText: '' });
   },
   render: function() {
     var filterText = this.state.filterText || '';
     return (
-        <div className="w-filter-con" style={this.props.wStyle}>
-          <input type="text" value={filterText}
+      <div className="w-filter-con" style={this.props.wStyle}>
+        <input
+          type="text"
+          value={filterText}
           onChange={this.onFilterChange}
           onKeyDown={this.onFilterKeyDown}
-          style={{background: filterText.trim() ? '#000' : undefined}}
-          className="w-filter-input" maxLength="128" placeholder="type filter text" />
-          <button onMouseDown={util.preventBlur}
+          style={{ background: filterText.trim() ? '#000' : undefined }}
+          className="w-filter-input"
+          maxLength="128"
+          placeholder="type filter text4"
+        />
+        <button
+          onMouseDown={util.preventBlur}
           onClick={this.clearFilterText}
-          style={{display: this.state.filterText ? 'block' :  'none'}} type="button" className="close" title="Ctrl[Command]+D"><span aria-hidden="true">&times;</span></button>
-        </div>
+          style={{ display: this.state.filterText ? 'block' : 'none' }}
+          type="button"
+          className="close"
+          title="Ctrl[Command]+D"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
     );
   }
 });

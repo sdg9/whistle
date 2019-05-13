@@ -51,6 +51,7 @@
     "node-forge": "0.7.5",
     "node-native-zip2": "^1.0.0",
     "node-pac": "^0.4.0",
+    "notepack.io": "^2.2.0",
     "parseurl": "^1.3.1",
     "pfork": "^0.2.1",
     "pipestream": "^0.5.0",
@@ -65,7 +66,7 @@
   },
   "scripts": {
     "dev": "webpack --config ./biz/webui/htdocs/src/webpack.config -w",
-    "start": "node bin/whistle.js run -p 8888",
+    "start": "node bin/whistle.js run -p 8899",
     "test": "node test/index.test.js",
     "lint": "eslint *.js ./lib ./bin ./biz ./test ./docs/script",
     "lintfix": "eslint --fix *.js ./lib ./bin ./biz ./test ./docs/script",
@@ -107,7 +108,8 @@
     "style-loader": "0.12.3",
     "tape": "^4.6.0",
     "url-loader": "0.5.6",
-    "webpack": "1.11.0",
+    "webpack": "^1.11.0",
+    "webpack-cli": "^3.3.2",
     "whistle.test": "*",
     "ws": "^1.1.4"
   }

@@ -5,12 +5,14 @@ var Textarea = require('./textarea');
 var FrameComposer = require('./frame-composer');
 var util = require('./util');
 var events = require('./events');
+var notepack = require('notepack.io');
 
 var BTNS = [
-  {name: 'TextView'},
-  {name: 'JSONView'},
-  {name: 'HexView'},
-  {name: 'Composer'}
+  { name: 'TextView' },
+  { name: 'JSONView' },
+  { name: 'HexView' },
+  { name: 'Composer' },
+  { name: 'MessagePack' }
 ];
 
 function findActive(btn) {
@@ -64,12 +66,34 @@ var FrameClient = React.createClass({
     }
     base64 = base64 || '';
     return (
-      <div className={'fill orient-vertical-box w-frames-data' + (this.props.hide ? ' hide' : '')}>
+      <div
+        className={
+          'fill orient-vertical-box w-frames-data' +
+          (this.props.hide ? ' hide' : '')
+        }
+      >
         <BtnGroup onClick={this.onClickBtn} btns={BTNS} />
-        <Textarea className="fill" base64={base64} value={text} hide={btn.name !== 'TextView'} />
+        <Textarea
+          className="fill"
+          base64={base64}
+          value={text}
+          hide={btn.name !== 'TextView'}
+        />
         <JSONViewer data={json} hide={btn.name !== 'JSONView'} />
-        <Textarea className="fill n-monospace" isHexView="1" base64={base64} value={bin} hide={btn.name !== 'HexView'} />
+        <Textarea
+          className="fill n-monospace"
+          isHexView="1"
+          base64={base64}
+          value={bin}
+          hide={btn.name !== 'HexView'}
+        />
         <FrameComposer data={this.props.data} hide={btn.name !== 'Composer'} />
+        <Textarea
+          className="fill"
+          base64={base64}
+          value={notepack.decode(base64)}
+          hide={btn.name !== 'MessagePack'}
+        />
       </div>
     );
   }

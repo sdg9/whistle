@@ -1,3 +1,7 @@
+process.env.READABLE_STREAM = 'disable';
+//see: https://github.com/joyent/node/issues/9272
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 var net = require('net');
 var tls = require('tls');
 var res = require('http').OutgoingMessage.prototype;
@@ -25,8 +29,6 @@ if (ver[0] >= 7 && ver[1] >= 7) {
   }
 }
 
-//see: https://github.com/joyent/node/issues/9272
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 if (typeof tls.checkServerIdentity == 'function') {
   var checkServerIdentity = tls.checkServerIdentity;
   tls.checkServerIdentity = function() {

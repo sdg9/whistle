@@ -2,21 +2,31 @@ var React = require('react');
 var BtnGroup = require('./btn-group');
 var JSONViewer = require('./json-viewer');
 var Textarea = require('./textarea');
+var MessagepackText = require('./messagepack');
+var MessagepackViewer = require('./msgpack-viewer');
 var FrameComposer = require('./frame-composer');
 var util = require('./util');
 var events = require('./events');
 var notepack = require('notepack.io');
+var msgpack = require('msgpack5')();
 
 var BTNS = [
+  { name: 'MessagePack' },
   { name: 'TextView' },
   { name: 'JSONView' },
   { name: 'HexView' },
-  { name: 'Composer' },
-  { name: 'MessagePack' }
+  { name: 'Composer' }
 ];
 
 function findActive(btn) {
   return btn.active;
+}
+
+function base64MessagePackDecodeToJson(base64) {
+  if (base64) {
+    const buffer = Buffer.from(base64, 'base64');
+    return JSON.stringify(msgpack.decode(buffer));
+  }
 }
 
 var FrameClient = React.createClass({
@@ -58,6 +68,7 @@ var FrameClient = React.createClass({
     }
     var frame = this.props.frame;
     var text, json, bin, base64;
+    // console.log('FD: ', this.props);
     if (frame) {
       text = util.getBody(frame, true);
       bin = util.getHex(frame);
@@ -88,11 +99,27 @@ var FrameClient = React.createClass({
           hide={btn.name !== 'HexView'}
         />
         <FrameComposer data={this.props.data} hide={btn.name !== 'Composer'} />
+        {/* <JSONViewer
+          data={base64MessagePackDecodeToJson(base64)}
+          hide={btn.name !== 'MessagePack'}
+        /> */}
         <Textarea
+          className="fill n-monospace"
+          isHexView="1"
+          base64={base64MessagePackDecodeToJson(base64)}
+          value={base64MessagePackDecodeToJson(base64)}
+          hide={btn.name !== 'MessagePack'}
+        />
+        {/* <MessagepackText
           className="fill"
           base64={base64}
-          value={notepack.decode(base64)}
+          value={text}
           hide={btn.name !== 'MessagePack'}
+        /> */}
+        {/* <MessagepackViewer
+          data={base64}
+          base64={base64}
+          hide={btn.name !== 'MessagePack'} */}
         />
       </div>
     );

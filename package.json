@@ -47,6 +47,7 @@
     "iconv-lite": "0.4.7",
     "lru-cache": "^4.1.1",
     "mime": "^1.4.1",
+    "msgpack5": "^4.2.1",
     "multer": "1.2.1",
     "node-forge": "0.7.5",
     "node-native-zip2": "^1.0.0",

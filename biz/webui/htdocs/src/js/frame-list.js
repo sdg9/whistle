@@ -6,6 +6,14 @@ var DropDown = require('./dropdown');
 var dataCenter = require('./data-center');
 var events = require('./events');
 var RecordBtn = require('./record-btn');
+var msgpack = require('msgpack5')();
+
+function base64MessagePackDecodeToJson(base64) {
+  if (base64) {
+    const buffer = Buffer.from(base64, 'base64');
+    return JSON.stringify(msgpack.decode(buffer));
+  }
+}
 
 var SEND_PERATORS = [
   {
@@ -225,7 +233,8 @@ var FrameList = React.createClass({
             href="javascript:;"
             draggable="false"
           >
-            <span className="glyphicon glyphicon-remove" />Clear
+            <span className="glyphicon glyphicon-remove" />
+            Clear
           </a>
           <a
             onClick={self.replay}
@@ -236,7 +245,8 @@ var FrameList = React.createClass({
             href="javascript:;"
             draggable="false"
           >
-            <span className="glyphicon glyphicon-repeat" />Replay
+            <span className="glyphicon glyphicon-repeat" />
+            Replay
           </a>
           <a
             onClick={self.compose}
@@ -244,7 +254,8 @@ var FrameList = React.createClass({
             href="javascript:;"
             draggable="false"
           >
-            <span className="glyphicon glyphicon-edit" />Compose
+            <span className="glyphicon glyphicon-edit" />
+            Compose
           </a>
           <a
             onClick={self.abort}
@@ -252,7 +263,8 @@ var FrameList = React.createClass({
             href="javascript:;"
             draggable="false"
           >
-            <span className="glyphicon glyphicon-ban-circle" />Abort1
+            <span className="glyphicon glyphicon-ban-circle" />
+            Abort1
           </a>
           <DropDown
             disabled={reqData.closed}
@@ -345,7 +357,7 @@ var FrameList = React.createClass({
                   }
                 >
                   <span className={'glyphicon glyphicon-' + icon} />
-                  {item.data}
+                  {base64MessagePackDecodeToJson(item.base64) || item.data}
                 </li>
               );
             })}
